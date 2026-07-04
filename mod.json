@@ -33,5 +33,6 @@
 			"category": "editor",
 			"default": ["Ctrl+H"]
 		}
-	}
+	},
+	"tags": ["editor", "utility"]
 }

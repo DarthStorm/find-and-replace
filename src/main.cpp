@@ -5,15 +5,6 @@
  * Look into FindAndReplacePopup::perform to change the find and replace behaviour
  * (and also the documentation for this mod)
  * since most of the code is just ui stuff
- * 
- * oh yh btw
- * im kinda new to c++ and geode (i use python)
- * so a lot of the patterns were taken from mat.circle-tool
- * simply because it's a very simple mod that does a simple thing in the editor
- * so ty lol
- * also to any learners i commented all of my code — even the most trivial tasks —
- * because ill probably forget most of this
- * TODO: delete this part when i get better at geode
  */
 
 #include <Geode/Geode.hpp>
@@ -72,12 +63,17 @@ public:
 		target_id_input->setCallback([this](std::string const& str) {
 			m_target_id = geode::utils::numFromString<float>(str).unwrapOr(m_target_id);
 		});
-
+		// add node id
+		target_id_input->setID("target-id-input"_spr);
+		
 		// position left center
 		layer->addChildAtPosition(target_id_input, Anchor::Center, ccp(-60, 0));
 		// add accompanying label
-		layer->addChildAtPosition(CCLabelBMFont::create("Replace", "goldFont.fnt"), Anchor::Center, ccp(-60, 30));
-
+		auto* target_id_label = CCLabelBMFont::create("Replace", "goldFont.fnt");
+		layer->addChildAtPosition(target_id_label, Anchor::Center, ccp(-60, 30));
+		// add node id
+		target_id_label->setID("target-id-label"_spr);
+		
 		// add replace_id input
 		auto replace_id_input = geode::TextInput::create(60.f, ""); // create
 		replace_id_input->setCommonFilter(CommonFilter::Int); // ony allow int
@@ -86,37 +82,48 @@ public:
 		replace_id_input->setCallback([this](std::string const& str) {
 			m_replace_id = geode::utils::numFromString<float>(str).unwrapOr(m_replace_id);
 		});
-
+		// add node id
+		replace_id_input->setID("replace-id-input"_spr);
+		
 		// position right center
 		layer->addChildAtPosition(replace_id_input, Anchor::Center, ccp(60, 0));
 		// add accompanying label
-		layer->addChildAtPosition(CCLabelBMFont::create("With", "goldFont.fnt"), Anchor::Center, ccp(60, 30));
-
-
+		auto* replace_id_label = CCLabelBMFont::create("With", "goldFont.fnt");
+		layer->addChildAtPosition(replace_id_label, Anchor::Center, ccp(60, 30));
+		// add node id
+		replace_id_label->setID("replace-id-label"_spr);
+		
+		
 		// add confirm button (replace)
-		menu->addChildAtPosition(
-            CCMenuItemSpriteExtra::create(
+		auto* confirm_button = CCMenuItemSpriteExtra::create(
                 ButtonSprite::create("Replace", button_width, true, "goldFont.fnt", "GJ_button_01.png", 0, 0.75f),
 				this, menu_selector(FindAndReplacePopup::on_apply) // on_apply calls replace
-			),
-			// position bottom right
-			Anchor::Center, ccp(60, -30)
-		);
+			);
+			
+		// add node id
+		confirm_button->setID("confirm-button"_spr);
+		// position bottom right
+		menu->addChildAtPosition(confirm_button,Anchor::Center, ccp(60, -30));
+		
         
 		// add exit button
-		menu->addChildAtPosition(
-			CCMenuItemSpriteExtra::create(
-				ButtonSprite::create("Cancel", button_width, true, "goldFont.fnt", "GJ_button_01.png", 0, 0.75f),
-				this, menu_selector(FindAndReplacePopup::onClose)
-			),
-			// position bottom left
-			Anchor::Center, ccp(-60, -30)
+
+		auto* exit_button = CCMenuItemSpriteExtra::create(
+			ButtonSprite::create("Cancel", button_width, true, "goldFont.fnt", "GJ_button_01.png", 0, 0.75f),
+			this, menu_selector(FindAndReplacePopup::onClose)
 		);
+		
+		// add node id
+		exit_button->setID("exit-button"_spr);
+		// position bottom left
+		menu->addChildAtPosition(exit_button,Anchor::Center, ccp(-60, -30));
 
 		// add info button
-		auto info_btn = CCMenuItemSpriteExtra::create(
+		auto* info_btn = CCMenuItemSpriteExtra::create(
 			CCSprite::createWithSpriteFrameName("GJ_infoIcon_001.png"), this, menu_selector(FindAndReplacePopup::on_info)
 		);
+		// add node id
+		info_btn->setID("info-button"_spr);
 		// position top right relative to menu, like all info buttons in game
 		menu->addChildAtPosition(info_btn, Anchor::TopRight, ccp(-19, -19));
 
@@ -126,6 +133,11 @@ public:
 
 	void on_apply(CCObject* thing) { // actually dont know what `thing` is
 		auto* editor = GameManager::sharedState()->getEditorLayer()->m_editorUI;
+
+		// just incase editor is nullptr
+		if (!editor) {
+			return;
+		}
 		auto objs = editor->getSelectedObjects();
         perform(); // the function that does the thing
 		onClose(thing); // TODO: make this not use thing
@@ -239,8 +251,9 @@ class $modify(MyEditorUI, EditorUI) {
 	void createMoveMenu() {
 		EditorUI::createMoveMenu();
 		auto* btn = this->getSpriteButton("button.png"_spr, menu_selector(MyEditorUI::on_find_and_replace), nullptr, 0.9f);
+		btn->setID("find_and_replace_button"_spr); // set node id
 		m_editButtonBar->m_buttonArray->addObject(btn);
-		// magic taken straight from circle tool
+		// magic taken straight from mat.circle-tool to add the button to the editor bar
 		auto rows = GameManager::sharedState()->getIntGameVariable("0049");
 		auto cols = GameManager::sharedState()->getIntGameVariable("0050");
 		m_editButtonBar->reloadItems(rows, cols);
