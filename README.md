@@ -11,9 +11,6 @@ Currently copies movement, rotation, scaling, and group IDs.
 If there are any problems with this mod, fix it yourself and create a pull request (thanks!), or report it to the discord server
 
 
-
-[![Build Status](https://github.com/yourusername/findandreplace/actions/workflows/build.yml/badge.svg)](https://github.com/yourusername/findandreplace/actions/workflows/build.yml)
-
 ## Download
 
-Download the latest build from the [Actions tab](https://github.com/yourusername/findandreplace/actions) or from [Releases](https://github.com/yourusername/findandreplace/releases)
+Download the mod from the [Actions tab](https://github.com/DarthStorm/find-and-replace/actions) or from [Releases](https://github.com/DarthStorm/find-and-replace/releases/)
